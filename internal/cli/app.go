@@ -11,6 +11,7 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"go-command-line-todo/internal/commands"
 	"go-command-line-todo/internal/store"
 	"go-command-line-todo/internal/ui"
 )
@@ -39,14 +40,16 @@ func (a *App) Run() {
 
 		switch choice {
 		case "1":
-			fmt.Println("Add Task")
+			a.runAddFlow()
 		case "2":
-			fmt.Println("List All Tasks")
+			a.runListFlow()
 		case "3":
-			fmt.Println("Update Task")
+			a.runMarkDoneFlow()
 		case "4":
-			fmt.Println("Delete Task")
+			a.runUpdateFlow()
 		case "5":
+			a.runDeleteFlow()
+		case "6":
 			fmt.Println("GoodBye!")
 			return
 		default:
@@ -55,4 +58,86 @@ func (a *App) Run() {
 
 		ui.PrintTaskMenuShort()
 	}
+}
+
+func (a *App) runAddFlow() {
+	fmt.Print("Enter task title: ")
+	title := a.reader.ReadLine()
+
+	t, err := commands.HandleAdd(title, a.store)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Added task #%d: %s\n", t.ID, t.Title)
+}
+
+func (a *App) runListFlow() {
+	todos, err := commands.HandleListTodos(a.store)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	if len(todos) == 0 {
+		fmt.Println("No tasks yet.")
+		return
+	}
+	for _, t := range todos {
+		status := " "
+		if t.Done {
+			status = "x"
+		}
+		fmt.Printf("[%s] %d. %s\n", status, t.ID, t.Title)
+	}
+}
+
+func (a *App) runMarkDoneFlow() {
+	fmt.Print("Enter task ID to mark done: ")
+	id, err := a.reader.ReadInt()
+	if err != nil {
+		fmt.Println("Invalid ID.")
+		return
+	}
+
+	t, err := commands.HandleMarkAsDone(id, a.store)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Marked task #%d as done.\n", t.ID)
+}
+
+func (a *App) runUpdateFlow() {
+	fmt.Print("Enter task ID to update: ")
+	id, err := a.reader.ReadInt()
+	if err != nil {
+		fmt.Println("Invalid ID.")
+		return
+	}
+
+	fmt.Print("Enter new title: ")
+	newTitle := a.reader.ReadLine()
+
+	t, err := commands.HandleUpdate(id, newTitle, a.store)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Updated task #%d: %s\n", t.ID, t.Title)
+}
+
+func (a *App) runDeleteFlow() {
+	fmt.Print("Enter task ID to delete: ")
+	id, err := a.reader.ReadInt()
+	if err != nil {
+		fmt.Println("Invalid ID.")
+		return
+	}
+
+	err = commands.HandleDelete(id, a.store)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	fmt.Printf("Deleted task #%d.\n", id)
 }

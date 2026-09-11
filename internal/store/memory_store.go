@@ -31,19 +31,14 @@ func NewMemoryStore() *MemoryStore {
 	}
 }
 
-func (m *MemoryStore) Add(t todo.Todo) error {
+func (m *MemoryStore) Add(t todo.Todo) (todo.Todo, error) {
 	t.ID = m.nextId
 	m.nextId++
-
-	m.todos[t.ID] = t
-	return nil
+	m.todos = append(m.todos, t)
+	return t, nil
 }
 
 func (m *MemoryStore) List() ([]todo.Todo, error) {
-	if len(m.todos) == 0 {
-		return nil, ErrEmptyTodos
-	} 
-
 	return m.todos, nil
 }
 

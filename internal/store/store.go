@@ -11,7 +11,7 @@ package store
 import "go-command-line-todo/internal/todo"
 
 type Store interface {
-	Add(t todo.Todo) error
+	Add(t todo.Todo) (todo.Todo, error)
 	List() ([]todo.Todo, error)
 	Update(t todo.Todo) error
 	Delete(id int) error

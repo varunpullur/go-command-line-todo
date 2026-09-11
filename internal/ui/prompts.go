@@ -20,26 +20,27 @@ Choose storage type:
   1. In-Memory (data lost on exit)
   2. File-based (coming soon)
 
-Enter your choice: 
-`
+Enter your choice: `
 
 const taskMenuFullBanner = `
 =====================================
               Todo CLI
 =====================================
-  1. Add Task
-  2. List Tasks
-  3. Update Task
-  4. Delete Task
-  5. Exit
+  1. Add Todo
+  2. List Todos
+  3. Mark Todo as Done
+  4. Update Todo
+  5. Delete Todo
+  6. Exit
 Enter your choice: `
 
 const taskMenuShorBanner = `
-  1. Add Task
-  2. List Tasks
-  3. Update Task
-  4. Delete Task
-  5. Exit
+  1. Add Todo
+  2. List Todos
+  3. Mark Todo as Done
+  4. Update Todo
+  5. Delete Todo
+  6. Exit
 Enter your choice: `
 
 const invalidChoice = "Invalid Choice"

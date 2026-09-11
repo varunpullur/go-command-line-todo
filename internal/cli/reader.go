@@ -11,6 +11,7 @@ package cli
 import (
 	"bufio"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -30,4 +31,9 @@ func (r *Reader) ReadLine() string {
 	}
 
 	return strings.TrimSpace(r.scanner.Text())
+}
+
+func (r *Reader) ReadInt() (int, error) {
+	line := r.ReadLine()
+	return strconv.Atoi(line)
 }
